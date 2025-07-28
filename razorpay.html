@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EMS Razorpay Payment</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <h2>Processing Payment...</h2>
+  <div id="result"></div>
+  <script>
+    function getParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+    const order_id = getParam('order_id');
+    const key_id = getParam('key_id');
+    const amount = getParam('amount');
+    const name = getParam('name') || 'EMS School';
+    const description = getParam('desc') || 'Fee Payment';
+
+    if (!order_id || !key_id || !amount) {
+      document.getElementById('result').innerText = 'Missing payment details in URL.';
+    } else {
+      const options = {
+        key: key_id,
+        amount: amount,
+        currency: 'INR',
+        name,
+        description,
+        order_id,
+        handler: function (response) {
+          document.getElementById('result').innerText = 'Payment complete! You may close this window.';
+        },
+        prefill: {},
+        theme: { color: '#3399cc' }
+      };
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
+</body>
+</html>
